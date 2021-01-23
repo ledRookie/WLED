@@ -844,6 +844,8 @@ class WS2812FX {
     // mode helper functions
     uint16_t
       blink(uint32_t, uint32_t, bool strobe, bool),
+      // Mr.Atari change:
+      alternate(uint32_t, uint32_t, bool strobe, bool, uint8_t blanks),
       candle(bool),
       color_wipe(bool, bool),
       dynamic(bool),
@@ -862,8 +864,6 @@ class WS2812FX {
       twinklefox_base(bool),
       spots_base(uint16_t),
       phased_base(uint8_t);
-      // Mr.Atari change:
-      alternate(uint32_t, uint32_t, bool strobe, bool, uint8_t blanks),
 
 
     CRGB twinklefox_one_twinkle(uint32_t ms, uint8_t salt, bool cat);
@@ -916,7 +916,7 @@ const char JSON_mode_names[] PROGMEM = R"=====([
 "Fireworks 1D","Bouncing Balls","Sinelon","Sinelon Dual","Sinelon Rainbow","Popcorn","Drip","Plasma","Percent","Ripple Rainbow",
 "Heartbeat","Pacifica","Candle Multi", "Solid Glitter","Sunrise","Phased","Twinkleup","Noise Pal", "Sine","Phased Noise",
 "Flow","Chunchun","Dancing Shadows","Washing Machine","Candy Cane","Blends","TV Simulator","Dynamic Smooth",
-"A_Solid Alt 2", "A_Solid Alt 3", "A_Solid Alt 5", "A_Solid Alt 10"
+"A_Solid Alt 02", "A_Solid Alt 03", "A_Solid Alt 05", "A_Solid Alt 10"
 
 ])=====";
 
