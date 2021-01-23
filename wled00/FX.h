@@ -118,7 +118,9 @@
 #define IS_REVERSE      ((SEGMENT.options & REVERSE     ) == REVERSE     )
 #define IS_SELECTED     ((SEGMENT.options & SELECTED    ) == SELECTED    )
 
-#define MODE_COUNT  118
+// Mr.Atari Change
+//#define MODE_COUNT  118
+#define MODE_COUNT  122
 
 #define FX_MODE_STATIC                   0
 #define FX_MODE_BLINK                    1
@@ -238,6 +240,12 @@
 #define FX_MODE_BLENDS                 115
 #define FX_MODE_TV_SIMULATOR           116
 #define FX_MODE_DYNAMIC_SMOOTH         117
+// Mr.Atari Change
+#define FX_MODE_SOLID_ALT02            118
+#define FX_MODE_SOLID_ALT03            119
+#define FX_MODE_SOLID_ALT05            120
+#define FX_MODE_SOLID_ALT10            121
+
 
 
 class WS2812FX {
@@ -577,6 +585,12 @@ class WS2812FX {
       _mode[FX_MODE_BLENDS]                  = &WS2812FX::mode_blends;
       _mode[FX_MODE_TV_SIMULATOR]            = &WS2812FX::mode_tv_simulator;
       _mode[FX_MODE_DYNAMIC_SMOOTH]          = &WS2812FX::mode_dynamic_smooth;
+      // Mr.Atari change:
+      _mode[FX_MODE_SOLID_ALT02]             = &WS2812FX::mode_alternate1on1off;
+      _mode[FX_MODE_SOLID_ALT03]             = &WS2812FX::mode_alternate1on2off;
+      _mode[FX_MODE_SOLID_ALT05]             = &WS2812FX::mode_alternate1on4off;
+      _mode[FX_MODE_SOLID_ALT10]             = &WS2812FX::mode_alternate1on9off;
+
 
       _brightness = DEFAULT_BRIGHTNESS;
       currentPalette = CRGBPalette16(CRGB::Black);
@@ -676,6 +690,13 @@ class WS2812FX {
       mode_static(void),
       mode_blink(void),
       mode_blink_rainbow(void),
+
+      // Mr.Atari change
+      mode_alternate1on1off(void),
+      mode_alternate1on2off(void),
+      mode_alternate1on4off(void),
+      mode_alternate1on9off(void),
+
       mode_strobe(void),
       mode_strobe_rainbow(void),
       mode_color_wipe(void),
@@ -841,6 +862,9 @@ class WS2812FX {
       twinklefox_base(bool),
       spots_base(uint16_t),
       phased_base(uint8_t);
+      // Mr.Atari change:
+      alternate(uint32_t, uint32_t, bool strobe, bool, uint8_t blanks),
+
 
     CRGB twinklefox_one_twinkle(uint32_t ms, uint8_t salt, bool cat);
     CRGB pacifica_one_layer(uint16_t i, CRGBPalette16& p, uint16_t cistart, uint16_t wavescale, uint8_t bri, uint16_t ioff);
@@ -891,7 +915,9 @@ const char JSON_mode_names[] PROGMEM = R"=====([
 "Twinklefox","Twinklecat","Halloween Eyes","Solid Pattern","Solid Pattern Tri","Spots","Spots Fade","Glitter","Candle","Fireworks Starburst",
 "Fireworks 1D","Bouncing Balls","Sinelon","Sinelon Dual","Sinelon Rainbow","Popcorn","Drip","Plasma","Percent","Ripple Rainbow",
 "Heartbeat","Pacifica","Candle Multi", "Solid Glitter","Sunrise","Phased","Twinkleup","Noise Pal", "Sine","Phased Noise",
-"Flow","Chunchun","Dancing Shadows","Washing Machine","Candy Cane","Blends","TV Simulator","Dynamic Smooth"
+"Flow","Chunchun","Dancing Shadows","Washing Machine","Candy Cane","Blends","TV Simulator","Dynamic Smooth",
+"A_Solid Alt 2", "A_Solid Alt 3", "A_Solid Alt 5", "A_Solid Alt 10"
+
 ])=====";
 
 
