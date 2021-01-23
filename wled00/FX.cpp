@@ -30,6 +30,7 @@
 #define IBN 5100
 #define PALETTE_SOLID_WRAP (paletteBlend == 1 || paletteBlend == 3)
 
+
 /*
  * No blinking. Just plain old static light.
  */
@@ -75,6 +76,70 @@ uint16_t WS2812FX::blink(uint32_t color1, uint32_t color2, bool strobe, bool do_
   } else fill(color);
 
   return FRAMETIME;
+}
+
+
+// Mr.Atari change
+/*
+ * Blink/strobe function
+ * Alternate between color1 and color2
+ * if(strobe == true) then create a strobe effect
+ * NOTE: Maybe re-rework without timer
+ */
+uint16_t WS2812FX::alternate(uint32_t color1, uint32_t color2, bool strobe, bool do_palette, uint8_t blanks) {
+
+  uint32_t color = ((SEGENV.aux0 & 1) == 0) ? color1 : color2;
+  if (color == color1 && do_palette)
+  {
+    for(uint16_t i = 0; i < SEGLEN; i++) {
+      // Check if need to turn LED on
+      if ((i % blanks) == 0) {
+        // Turn LED on
+        setPixelColor(i, color_from_palette(i, true, PALETTE_SOLID_WRAP, 0));
+        continue;  
+      }
+      // Keep LED i off
+      setPixelColor(i, 0);
+    }
+  } else fill(color);
+
+  return FRAMETIME;
+}
+
+
+/* rhabot change
+ * mode alternate
+ * When blanks = 2 ==> 1 On, Next 1 Off 
+ */
+uint16_t WS2812FX::mode_alternate1on1off(void) {
+  return alternate(SEGCOLOR(0), SEGCOLOR(1), false, true, 2);
+}
+
+
+/* rhabot change
+ * mode alternate
+ * When blanks = 3 ==> 1 On, Next 2 Off 
+ */
+uint16_t WS2812FX::mode_alternate1on2off(void) {
+  return alternate(SEGCOLOR(0), SEGCOLOR(1), false, true, 3);
+}
+
+
+/* rhabot change
+ * mode alternate
+ * When blanks = 5 ==> 1 On, Next 4 Off 
+ */
+uint16_t WS2812FX::mode_alternate1on4off(void) {
+  return alternate(SEGCOLOR(0), SEGCOLOR(1), false, true, 5);
+}
+
+
+/* rhabot change
+ * mode alternate
+ * When blanks = 10 ==> 1 On, Next 9 Off 
+ */
+uint16_t WS2812FX::mode_alternate1on9off(void) {
+  return alternate(SEGCOLOR(0), SEGCOLOR(1), false, true, 10);
 }
 
 
@@ -231,6 +296,7 @@ uint16_t WS2812FX::mode_random_color(void) {
 }
 
 
+
 /*
  * Lights every LED in a random color. Changes all LED at the same time
  * to new random colors.
@@ -277,6 +343,8 @@ uint16_t WS2812FX::mode_dynamic(void) {
 uint16_t WS2812FX::mode_dynamic_smooth(void) {
   return dynamic(true);
  }
+
+
 
 /*
  * Does the "standby-breathing" of well known i-Devices.
@@ -592,6 +660,9 @@ uint16_t WS2812FX::mode_sparkle(void) {
 }
 
 
+
+
+
 /*
  * Lights all LEDs in the color. Flashes single col 1 pixels randomly. (List name: Sparkle Dark)
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
@@ -642,12 +713,15 @@ uint16_t WS2812FX::mode_multi_strobe(void) {
     setPixelColor(i, color_from_palette(i, true, PALETTE_SOLID_WRAP, 1));
   }
 
+
   SEGENV.aux0 = 50 + 20*(uint16_t)(255-SEGMENT.speed);
   uint16_t count = 2 * ((SEGMENT.intensity / 10) + 1);
   if(SEGENV.aux1 < count) {
     if((SEGENV.aux1 & 1) == 0) {
       fill(SEGCOLOR(0));
       SEGENV.aux0 = 15;
+
+
     } else {
       SEGENV.aux0 = 50;
     }
@@ -661,6 +735,7 @@ uint16_t WS2812FX::mode_multi_strobe(void) {
 
   return FRAMETIME;
 }
+
 
 /*
  * Android loading circle
@@ -1009,12 +1084,14 @@ uint16_t WS2812FX::mode_merry_christmas(void) {
   return running(RED, GREEN);
 }
 
+
 /*
  * Alternating red/white pixels running.
  */
 uint16_t WS2812FX::mode_candy_cane(void) {
   return running(RED, WHITE);
 }
+
 
 /*
  * Alternating orange/purple pixels running.
@@ -1616,6 +1693,7 @@ uint16_t WS2812FX::mode_oscillate(void)
 }
 
 
+
 uint16_t WS2812FX::mode_lightning(void)
 {
   uint16_t ledstart = random16(SEGLEN);               // Determine starting location of flash
@@ -1653,9 +1731,15 @@ uint16_t WS2812FX::mode_lightning(void)
       }
       SEGENV.step = millis();
     }
+
+
+
   }
   return FRAMETIME;
+
 }
+
+
 
 
 // Pride2015
